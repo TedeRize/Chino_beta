@@ -4,6 +4,7 @@ import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 import sys
+import json
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -22,20 +23,17 @@ def main():
     ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
 
     request = ai.text_request()
-
     request.lang = 'ja'  # optional, default value equal 'en'
 
     print("文字を入力してください")
-
     input_word = sys.stdin.readline()
-
     request.session_id = '<SESSION ID, UNIQUE FOR EACH USER>'
-
     request.query =  input_word
 
     response = request.getresponse()
+    json_obj = json.loads(response.read())
+    print(json_obj['result']['fulfillment']['speech'])
 
-    print (response.read())
 
 if __name__ == '__main__':
     main()
